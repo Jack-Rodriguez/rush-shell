@@ -15,15 +15,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Shell"
+args = "Build Shell"
 
 [[workflows.workflow]]
-name = "Shell"
+name = "Build Shell"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "make run"
+args = "make clean && make"
 
 [workflows.workflow.metadata]
 outputType = "console"

@@ -36,7 +36,13 @@ The project appears to be implemented in C, which is the traditional choice for 
 - **POSIX APIs**: For process control, file operations, and signal handling
 
 ## Development Tools
-- **C Compiler**: GCC or similar for building the shell executable
-- **Make/Build System**: Likely uses standard Unix build tools for compilation
+- **C Compiler**: Clang compiler installed and ready for development
+- **Build System**: Ready for custom build configuration (Makefile or direct compilation)
+- **Development Environment**: Configured for C development on Linux
+
+## Current Status
+- Clean workspace ready for custom shell implementation
+- C++ development tools installed and configured
+- No source code files present - ready for custom implementation
 
 The project maintains minimal external dependencies to ensure portability and simplicity, relying primarily on standard Unix system calls and C library functions.

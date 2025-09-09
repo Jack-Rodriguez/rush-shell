@@ -1,33 +1,28 @@
 CC=clang
 CFLAGS=-Wall -Wextra -std=c99 -g
-TARGET=rush-shell
-SOURCE=shell.c
+TARGET=shell
+SRCDIR=src
+
+# Find all .c files in src directory
+SOURCES=$(wildcard $(SRCDIR)/*.c)
 
 # Default target
 all: $(TARGET)
 
-# Build the shell
-$(TARGET): $(SOURCE)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCE)
+# Build the shell (will work when you add source files)
+$(TARGET): $(SOURCES)
+	@if [ -z "$(SOURCES)" ]; then \
+		echo "No source files found in $(SRCDIR)/. Add your .c files there."; \
+		exit 1; \
+	fi
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES)
 
-# Clean build artifacts
+# Clean build artifacts  
 clean:
 	rm -f $(TARGET)
-
-# Install (copy to /usr/local/bin)
-install: $(TARGET)
-	cp $(TARGET) /usr/local/bin/
-
-# Uninstall
-uninstall:
-	rm -f /usr/local/bin/$(TARGET)
 
 # Run the shell
 run: $(TARGET)
 	./$(TARGET)
 
-# Debug build
-debug: CFLAGS += -DDEBUG
-debug: $(TARGET)
-
-.PHONY: all clean install uninstall run debug
+.PHONY: all clean run
