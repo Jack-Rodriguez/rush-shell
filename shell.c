@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -31,6 +32,7 @@ void parse_command(char *line, char **args, int *background) {
 
 /* Built-in command: exit */
 int builtin_exit(char **args) {
+    (void)args; /* Suppress unused parameter warning */
     printf("Goodbye!\n");
     exit(0);
 }
@@ -49,6 +51,7 @@ int builtin_cd(char **args) {
 
 /* Built-in command: pwd */
 int builtin_pwd(char **args) {
+    (void)args; /* Suppress unused parameter warning */
     char cwd[1024];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         printf("%s\n", cwd);
