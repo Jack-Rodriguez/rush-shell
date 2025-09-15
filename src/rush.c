@@ -58,6 +58,7 @@ int change_dir(char **args, int argc)
     return 0;
 }
 
+//this is my main
 int main(int argc, char *argv[]) {
     
     if(argc > 1) {
