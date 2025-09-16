@@ -3,7 +3,15 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAXARGS 128 //sets max # of arguments to 128, 256 is the total characters of input so this number of args is not likely to be reached
+//sets max # of arguments to 128, 256 is the total characters of input so this number of args is not likely to be reached
+#define MAXARGS 128 
+//sets max # of paths to 128
+#define MAXPATHS 128 
+
+//the array of paths
+char *paths[MAXPATHS];
+//aamount of paths in the above array
+int pathc = 0;
 
 //this is our parsing function. It goes through the given input and seperates tokens by spaces, tabs, and newlines. It also returns the argc to be used in other functions.
 int make_token(char *line, char **args, int maxargs)
@@ -58,6 +66,38 @@ int change_dir(char **args, int argc)
     return 0;
 }
 
+int path(char **args, int argc)
+{
+    for(int i = 0; i < pathc; i++)
+    {
+        free(paths[i]);
+        paths[i] = NULL;
+    }
+    
+    int counter = 0;
+    
+    if (argc == 0)
+    {
+        char error_message[30] = "An error has occurred\n";
+        write(STDERR_FILENO, error_message, strlen(error_message));
+        exit(1);
+    }
+    else if (argc == 1)
+    {
+        return 0;
+    }
+    else
+    {
+        while(counter < argc - 1) 
+        {
+            paths[pathc] = strdup(args[counter]);
+            counter++;
+        }
+    }
+
+    return counter;
+}
+
 //this is my main
 int main(int argc, char *argv[]) {
     
@@ -66,6 +106,10 @@ int main(int argc, char *argv[]) {
         write(STDERR_FILENO, error_message, strlen(error_message));
         exit(1);
     }
+
+    //this initializes the paths array with /bin, and iterates the path counter to 1
+    paths[0] = "/bin";
+    pathc = 1;
 
     while (1) 
     {
@@ -106,6 +150,10 @@ int main(int argc, char *argv[]) {
         // Built-in "exit"
         if(strcmp(line, "exit") == 0) 
         {
+            for(int i = 0; i < pathc; i++)
+            {
+                printf("path %d: %s\n", i, paths[i]);
+            }
             free(line);
             exit(0);
         }
@@ -116,7 +164,14 @@ int main(int argc, char *argv[]) {
             change_dir(args, argc);
         }
 
+        if(strcmp(args[0], "path") == 0)
+        {
+            pathc = path(args, argc);
+        }
+
         printf("cwd: %s\n", getcwd(NULL, 0));
+
+        
 
         // For now, do nothing with other input
         free(line);
