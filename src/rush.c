@@ -91,7 +91,7 @@ int path(char **args, int argc)
     {
         while(counter < argc - 1) 
         {
-            paths[pathc] = strdup(args[counter]);
+            paths[counter] = strdup(args[counter + 1]);
             counter++;
         }
     }
