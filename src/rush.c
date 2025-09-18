@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            if(is_executable(args[0]), paths, pathc) == 0)
+            if(is_executable(args[0], paths, pathc) == 0)
             {
                 printf("Command found: %s\n", args[0]);
             }
