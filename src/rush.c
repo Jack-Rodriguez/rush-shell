@@ -75,6 +75,7 @@ int path(char **args, int argc)
     }
 
     int counter = 0;
+    pathc = 0;
 
     if (argc == 0)
     {
@@ -99,19 +100,21 @@ int path(char **args, int argc)
 }
 
 //this is my main
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
 
-    if(argc > 1) {
+    if(argc > 1) 
+    {
         char error_message[30] = "An error has occurred\n";
         write(STDERR_FILENO, error_message, strlen(error_message));
         exit(1);
     }
 
     //this initializes the paths array with /bin, and iterates the path counter to 1
-    paths[0] = "/bin";
+    paths[0] = strdup("/bin");
     pathc = 1;
 
-    while (1) 
+    while(1) 
     {
         printf("rush> ");
         fflush(stdout);
@@ -144,7 +147,6 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        printf("argc: %d\n", argc);
 
 
         // Built-in "exit"
@@ -169,7 +171,6 @@ int main(int argc, char *argv[]) {
             pathc = path(args, argc);
         }
 
-        printf("cwd: %s\n", getcwd(NULL, 0));
 
 
 
