@@ -73,9 +73,9 @@ int path(char **args, int argc)
         free(paths[i]);
         paths[i] = NULL;
     }
-    
+
     int counter = 0;
-    
+
     if (argc == 0)
     {
         char error_message[30] = "An error has occurred\n";
@@ -100,7 +100,7 @@ int path(char **args, int argc)
 
 //this is my main
 int main(int argc, char *argv[]) {
-    
+
     if(argc > 1) {
         char error_message[30] = "An error has occurred\n";
         write(STDERR_FILENO, error_message, strlen(error_message));
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
         }
 
         printf("argc: %d\n", argc);
-       
+
 
         // Built-in "exit"
         if(strcmp(line, "exit") == 0) 
@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
 
         printf("cwd: %s\n", getcwd(NULL, 0));
 
-        
+
 
         // For now, do nothing with other input
         free(line);
