@@ -48,6 +48,7 @@ int make_token(char *line, char **args, int maxargs)
     return argc;
 }
 
+//change directory function
 int change_dir(char **args, int argc)
 {
     //cd can only take one argument, and cd itself is one so we need argc to be 2
@@ -110,6 +111,33 @@ int path(char **args, int argc)
     return counter;
 }
 
+int is_executable(char *cmd, char **paths, int pathc)
+{
+    for(int i = 0; i < pathc; i++)
+    {
+        //before hand I didnt know how to combine the strings, so I got the snprint function from chatgpt, and learned how it works. I still wrote this function myself though.
+        //so we set a string to be equal to the current path
+        char *dir = paths[i];
+        //next we create a new string to be the full path of the command
+        char exPath[1024];
+        //we set the cap to the size of the string, we should never exceed this but its important to be safe
+        size_t cap = sizeof exPath;
+        //combines the path, a slash, and the command into the new string
+        int n = snprintf(exPath, cap, "%s/%s", dir, cmd);
+        //checks the size
+        if (n >= 0 && (size_t)n < sizeof exPath)
+        {
+            //this checks if the path is executable. if so we return 0
+            if(access(exPath, X_OK) == 0)
+            {
+                return 0;
+            }
+        }
+    }
+    //this will be returned if the all paths are not executable, and if the size was too big
+    return -1;
+}
+
 //this is my main
 int main(int argc, char *argv[]) 
 {
@@ -164,17 +192,22 @@ int main(int argc, char *argv[])
             free(line);
             exit(0);
         }
-
         // Built-in "cd"
-        if(strcmp(args[0], "cd") == 0)
+        else if(strcmp(args[0], "cd") == 0)
         {
             change_dir(args, argc);
         }
-
         // Built-in "path"
-        if(strcmp(args[0], "path") == 0)
+        else if(strcmp(args[0], "path") == 0)
         {
             pathc = path(args, argc);
+        }
+        else
+        {
+            if(is_executable(args[0]), paths, pathc) == 0)
+            {
+                printf("Command found: %s\n", args[0]);
+            }
         }
 
         
