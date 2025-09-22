@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 //sets max # of arguments to 128, 256 is the total characters of input so this number of args is not likely to be reached
 #define MAXARGS 128 
@@ -12,6 +13,8 @@
 char *paths[MAXPATHS];
 //aamount of paths in the above array
 int pathc = 0;
+
+
 
 //this is our parsing function. It goes through the given input and seperates tokens by spaces, tabs, and newlines. It also returns the argc to be used in other functions.
 int make_token(char *line, char **args, int maxargs)
@@ -206,7 +209,25 @@ int main(int argc, char *argv[])
         {
             if(is_executable(args[0], paths, pathc) == 0)
             {
-                printf("Command found: %s\n", args[0]);
+                //I got most of this section from the chapter 5 lecture slides
+                int rc = fork();
+                if (rc < 0) 
+                { 
+                    char error_message[30] = "An error has occurred\n";
+                    write(STDERR_FILENO, error_message, strlen(error_message));
+                    exit(1);
+                }
+                else if (rc == 0)
+                {
+                    execv(args[0], args);
+                    char error_message[30] = "An error has occurred\n";
+                    write(STDERR_FILENO, error_message, strlen(error_message));
+                    exit(1);
+                }
+                else 
+                { 
+                    int wc = wait(NULL);
+                }
             }
         }
 
