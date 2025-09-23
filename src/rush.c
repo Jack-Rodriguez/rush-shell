@@ -14,6 +14,8 @@ char *paths[MAXPATHS];
 //aamount of paths in the above array
 int pathc = 0;
 
+char full_path[1024];
+
 
 
 //this is our parsing function. It goes through the given input and seperates tokens by spaces, tabs, and newlines. It also returns the argc to be used in other functions.
@@ -133,6 +135,8 @@ int is_executable(char *cmd, char **paths, int pathc)
             //this checks if the path is executable. if so we return 0
             if(access(exPath, X_OK) == 0)
             {
+                strncpy(full_path, exPath, sizeof full_path);
+                full_path[sizeof full_path - 1] = '\0';
                 return 0;
             }
         }
@@ -219,7 +223,8 @@ int main(int argc, char *argv[])
                 }
                 else if (rc == 0)
                 {
-                    execv(args[0], args);
+                    args[0] = full_path;  
+                    execv(full_path, args);
                     char error_message[30] = "An error has occurred\n";
                     write(STDERR_FILENO, error_message, strlen(error_message));
                     exit(1);
@@ -228,6 +233,11 @@ int main(int argc, char *argv[])
                 { 
                     int wc = wait(NULL);
                 }
+            }
+            else
+            {
+                char error_message[30] = "An error has occurred\n";
+                write(STDERR_FILENO, error_message, strlen(error_message));
             }
         }
 
