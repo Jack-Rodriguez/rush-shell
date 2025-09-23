@@ -1,6 +1,0 @@
-dir
-os.txt
-out.txt
-rush
-rush.c
-tmp.txt
