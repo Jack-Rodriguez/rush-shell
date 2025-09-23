@@ -16,6 +16,7 @@ int pathc = 0;
 
 char full_path[1024];
 
+char output_file[1024];
 
 
 //this is our parsing function. It goes through the given input and seperates tokens by spaces, tabs, and newlines. It also returns the argc to be used in other functions.
@@ -27,6 +28,8 @@ int make_token(char *line, char **args, int maxargs)
     char *p = line;
     //sets a pointer to the token
     char *token;
+
+    output_file[0] = '\0';
 
     //while the token isn't null, seperate the tokens by " \t\n" which is spaces, tabs, and newlines.
     while ((token = strsep(&p, " \t\n")) != NULL)
@@ -50,6 +53,29 @@ int make_token(char *line, char **args, int maxargs)
 
     //we have to set the larst argument as null so that it can be used later. functions will need to know when it is done.
     args[argc] = NULL;
+
+    for(int i = 0; i < argc; i++)
+    {
+        if(strcmp(args[i], ">") == 0)
+        {
+            if(i != argc - 2 || strcmp(args[i+1], ">") == 0)
+            {
+                char error_message[30] = "An error has occurred\n";
+                write(STDERR_FILENO, error_message, strlen(error_message));
+                return -1;
+            }
+            else
+            {
+                strncpy(output_file, args[i+1], sizeof output_file);
+                output_file[sizeof output_file - 1] = '\0';
+
+                
+                args[i] = NULL;
+
+                break; 
+            }
+        }
+    }
     return argc;
 }
 
@@ -102,6 +128,15 @@ int path(char **args, int argc)
     //adds the new paths to the paths array
     else
     {
+        for(int i = 1; i < argc; i++)
+        {
+            if(access(args[i], X_OK) != 0)
+            {
+                char error_message[30] = "An error has occurred\n";
+                write(STDERR_FILENO, error_message, strlen(error_message));
+                return -1;
+            }
+        }
         //while the counter is less than the argument count (minus one because we dont want to include the path command)
         while(counter < argc - 1) 
         {
@@ -221,9 +256,21 @@ int main(int argc, char *argv[])
                     write(STDERR_FILENO, error_message, strlen(error_message));
                     exit(1);
                 }
+                //CHILD PROCESS
                 else if (rc == 0)
                 {
                     args[0] = full_path;  
+
+                    if (output_file[0] != '\0') 
+                    {
+                        if (!freopen(output_file, "w", stdout)) 
+                        { 
+                            char error_message[30] = "An error has occurred\n";
+                            write(STDERR_FILENO, error_message, strlen(error_message));
+                            exit(1);
+                        }
+                    }
+                    
                     execv(full_path, args);
                     char error_message[30] = "An error has occurred\n";
                     write(STDERR_FILENO, error_message, strlen(error_message));
