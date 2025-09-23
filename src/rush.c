@@ -68,7 +68,7 @@ int make_token(char *line, char **args, int maxargs)
         if(strcmp(args[i], ">") == 0)
         {
             //if there are multiple > symbols or if there is more than one arguments to the right of >
-            if(i != argc - 2 || strcmp(args[i+1], ">") == 0)
+            if(i == 0 || i != argc - 2 || strcmp(args[i + 1], ">") == 0)
             {
                 char error_message[30] = "An error has occurred\n";
                 write(STDERR_FILENO, error_message, strlen(error_message));
@@ -173,6 +173,9 @@ int path(char **args, int argc)
 
 int is_executable(char *cmd, char **paths, int pathc)
 {
+    //if the command is null, we return -1
+    if (cmd == NULL) return -1;
+    
     for(int i = 0; i < pathc; i++)
     {
         //before hand I didnt know how to combine the strings, so I got the snprint function from chatgpt, and learned how it works. I still wrote this function myself though.
