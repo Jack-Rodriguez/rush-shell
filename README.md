@@ -1,2 +1,3 @@
 # rush-shell
-In this project, I will build a simple, efficient Unix shell. A shell is a command line interpreter (CLI) that operates in the following way: when I type in a command (in response to a prompt), the shell creates a child process that executes the command I entered and then prompts for more user input when the child process has finished
+In this project, I built a simple, efficient Unix shell. This project has three built in functions: path, cd, and exit. Any other commands was handled through the execv function. Overall theis project took about two weeks. I learned quite a bit about operating systems, fork, and other concepts. This project was also a great refresher for C as it had been a while for me.
+This project was done on replit to streamline my experience with Git. The bulk of this project can be found in rush.c, within the src directory. There you can also find the makefile. The code has extensive comments to explain each line essentially. 
